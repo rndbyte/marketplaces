@@ -1,0 +1,30 @@
+{
+    "name": "rndbyte/marketplaces",
+    "description": "Marketplaces API interaction",
+    "keywords": ["marketplaces", "library"],
+    "license": "MIT",
+    "type": "library",
+    "scripts": {
+        "test": "./vendor/bin/phpunit -v"
+    },
+    "require": {
+        "php": "^8.0",
+        "ext-filter": "*",
+        "psr/log": "^1.1",
+        "psr/http-client": "^1.0",
+        "guzzlehttp/psr7": "^1.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Marketplaces\\": "src/Marketplaces"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}
