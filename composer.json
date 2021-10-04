@@ -12,7 +12,7 @@
         "ext-filter": "*",
         "psr/log": "^1.1",
         "psr/http-client": "^1.0",
-        "guzzlehttp/psr7": "^1.8"
+        "guzzlehttp/psr7": "^2.0"
     },
     "autoload": {
         "psr-4": {
