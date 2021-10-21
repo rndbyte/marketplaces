@@ -6,8 +6,7 @@ namespace Marketplaces\Contracts;
 
 use Stringable;
 
-interface Result extends Stringable, Arrayable
+interface ResultInterface extends Stringable, ArrayableInterface
 {
     public function getPayload(): mixed;
-    public static function fromJson(string $jsonString): static;
 }

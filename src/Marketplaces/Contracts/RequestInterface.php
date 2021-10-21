@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Marketplaces\Contracts;
 
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\RequestInterface as RequestContract;
 
-interface Request
+interface RequestInterface
 {
     public const POST = 'POST';
     public const GET = 'GET';
@@ -28,6 +28,6 @@ interface Request
     public function getBodyAsJson(): string;
     public function getHttpVersion(): string;
     public function getPathWithParameters(): string;
-    public function createHttpRequest(): RequestInterface;
+    public function createHttpRequest(): RequestContract;
     public function setParameters(array $parameters): self;
 }

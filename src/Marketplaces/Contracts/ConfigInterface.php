@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Marketplaces\Contracts;
 
-interface Config
+interface ConfigInterface
 {
     public function getApiKey(): string;
     public function getClientId(): string;

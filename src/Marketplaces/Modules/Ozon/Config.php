@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Marketplaces\Modules\Ozon;
 
-use Marketplaces\Contracts\Config as ConfigInterface;
+use Marketplaces\Contracts\ConfigInterface as ConfigInterface;
 
 class Config implements ConfigInterface
 {

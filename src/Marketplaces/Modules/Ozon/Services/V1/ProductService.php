@@ -7,13 +7,15 @@ namespace Marketplaces\Modules\Ozon\Services\V1;
 use Psr\Http\Client\ClientExceptionInterface;
 use Marketplaces\Modules\Ozon\DTO\ProductListFilters;
 use Marketplaces\Modules\Ozon\Services\AbstractService;
-use Marketplaces\Components\Exceptions\MarketplaceException;
 use Marketplaces\Modules\Ozon\Results\V1\ProductListResult;
+use Marketplaces\Components\Exceptions\MarketplaceException;
 use Marketplaces\Modules\Ozon\Exceptions\OzonSellerException;
+use Marketplaces\Modules\Ozon\Factories\ResponseResultFactory;
 use Marketplaces\Modules\Ozon\Messages\V1\GetProductListMessage;
 use Marketplaces\Modules\Ozon\Results\V1\UpdateProductPriceResult;
 use Marketplaces\Modules\Ozon\Messages\V1\UpdateProductPriceMessage;
 use Marketplaces\Modules\Ozon\Results\V1\UpdateProductQuantityResult;
+use Marketplaces\Modules\Ozon\Messages\V1\UpdateProductsPricesMessage;
 use Marketplaces\Modules\Ozon\Messages\V1\UpdateProductQuantityMessage;
 
 class ProductService extends AbstractService
@@ -25,9 +27,7 @@ class ProductService extends AbstractService
      *
      * @param int|null $page
      * @param int|null $pageSize
-     * @param string|null $filterByOfferId
-     * @param int[]|null $filterByProductId
-     * @param string|null $filterByVisibility
+     * @param ProductListFilters|null $filters
      * @return ProductListResult
      * @throws ClientExceptionInterface
      * @throws MarketplaceException
@@ -35,25 +35,19 @@ class ProductService extends AbstractService
     public function list(
         int $page = null,
         int $pageSize = null,
-        string $filterByOfferId = null,
-        array $filterByProductId = null,
-        string $filterByVisibility = null,
+        ProductListFilters $filters = null,
     ): ProductListResult
     {
-        $filters = new ProductListFilters(
-            offerId: $filterByOfferId,
-            productIds: $filterByProductId,
-            visibility: $filterByVisibility,
-        );
-
         $request = new GetProductListMessage(
             config: $this->config,
-            filters: $filters,
+            filters: $filters ?? new ProductListFilters(),
             page: $page,
             pageSize: $pageSize,
         );
 
-        return ProductListResult::fromJson($this->sendRequest($request));
+        /** @var ProductListResult $result */
+        $result = ResponseResultFactory::new(ProductListResult::class, $this->sendRequest($request));
+        return $result;
     }
 
     /**
@@ -87,7 +81,26 @@ class ProductService extends AbstractService
             premiumPrice: $premiumPrice,
         );
 
-        return UpdateProductPriceResult::fromJson($this->sendRequest($request));
+        /** @var UpdateProductPriceResult $result */
+        $result = ResponseResultFactory::new(UpdateProductPriceResult::class, $this->sendRequest($request));
+        return $result;
+    }
+
+    /**
+     * Update the prices for many products.
+     *
+     * @param array[] $prices
+     * @return UpdateProductPriceResult
+     * @throws ClientExceptionInterface
+     * @throws MarketplaceException
+     */
+    public function updatePrices(array $prices): UpdateProductPriceResult
+    {
+        $request = new UpdateProductsPricesMessage($this->config, $prices);
+
+        /** @var UpdateProductPriceResult $result */
+        $result = ResponseResultFactory::new(UpdateProductPriceResult::class, $this->sendRequest($request));
+        return $result;
     }
 
     /**
@@ -115,6 +128,8 @@ class ProductService extends AbstractService
             productId: $productId
         );
 
-        return UpdateProductQuantityResult::fromJson($this->sendRequest($request));
+        /** @var UpdateProductQuantityResult $result */
+        $result = ResponseResultFactory::new(UpdateProductQuantityResult::class, $this->sendRequest($request));
+        return $result;
     }
 }

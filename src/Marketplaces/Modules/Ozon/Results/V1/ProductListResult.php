@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Marketplaces\Modules\Ozon\Results\V1;
 
 use stdClass;
-use Marketplaces\Components\Abstracts\HttpResponseResult;
+use Marketplaces\Components\Abstracts\AbstractHttpResponseResult;
 
 /**
  * Class ProductListResult
@@ -13,7 +13,7 @@ use Marketplaces\Components\Abstracts\HttpResponseResult;
  * @package Ozon\Services\V1\DTO\Responses\Product
  * @property stdClass result
  */
-final class ProductListResult extends HttpResponseResult
+final class ProductListResult extends AbstractHttpResponseResult
 {
     public function getResult(): stdClass
     {

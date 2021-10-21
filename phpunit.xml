@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+        bootstrap="vendor/autoload.php"
+        colors="true"
+>
+    <testsuites>
+<!--        <testsuite name="Unit">-->
+<!--            <directory suffix="Test.php" phpVersion="8.0.0" phpVersionOperator=">=">./tests/Unit</directory>-->
+<!--        </testsuite>-->
+        <testsuite name="Feature">
+            <directory suffix="Test.php" phpVersion="8.0.0" phpVersionOperator=">=">./tests/Feature</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

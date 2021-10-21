@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Marketplaces\Components\Abstracts;
 
-use Marketplaces\Contracts\Config;
-use Marketplaces\Contracts\Request;
-use Psr\Http\Message\RequestInterface;
 use GuzzleHttp\Psr7\Request as HttpRequest;
+use Marketplaces\Contracts\ConfigInterface;
+use Marketplaces\Contracts\RequestInterface;
+use Psr\Http\Message\RequestInterface as RequestContract;
 
-abstract class MarketplaceRequest implements Request
+abstract class AbstractMarketplaceRequest implements RequestInterface
 {
     protected string $url;
     protected array $headers;
     protected array $parameters = [];
 
     public function __construct(
-        protected Config $config,
+        protected ConfigInterface $config,
         protected string $method,
         protected string $path,
         protected array $body = [],
@@ -65,9 +65,9 @@ abstract class MarketplaceRequest implements Request
     /**
      * Make Psr-7 request instance.
      *
-     * @return RequestInterface
+     * @return RequestContract
      */
-    public function createHttpRequest(): RequestInterface
+    public function createHttpRequest(): RequestContract
     {
         return new HttpRequest(
             $this->getMethod(),

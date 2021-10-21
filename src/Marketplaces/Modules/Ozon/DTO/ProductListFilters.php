@@ -6,7 +6,7 @@ namespace Marketplaces\Modules\Ozon\DTO;
 
 use Marketplaces\Modules\Ozon\Enums\ProductVisibility;
 
-final class ProductListFilters
+class ProductListFilters
 {
     public ?string $visibility;
 
@@ -14,8 +14,8 @@ final class ProductListFilters
      * @param int[] $productIds
      */
     public function __construct(
-        public ?string $offerId,
-        public ?array $productIds,
+        public ?string $offerId = null,
+        public ?array $productIds = null,
         string $visibility = null,
     )
     {

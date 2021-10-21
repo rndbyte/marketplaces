@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Marketplaces\Contracts;
 
-interface Arrayable
+interface ArrayableInterface
 {
     public function toArray(): array;
 }

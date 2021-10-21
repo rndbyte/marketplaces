@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Marketplaces\Modules\Ozon\Messages\V2;
 
-use Marketplaces\Contracts\Config;
-use Marketplaces\Components\Abstracts\MarketplaceRequest;
+use Marketplaces\Contracts\ConfigInterface;
+use Marketplaces\Components\Abstracts\AbstractMarketplaceRequest;
 
-final class GetProductInfoMessage extends MarketplaceRequest
+class GetProductInfoMessage extends AbstractMarketplaceRequest
 {
     public function __construct(
-        Config $config,
+        ConfigInterface $config,
         string $offerId,
         int $productId = null,
         int $sku = null,
@@ -18,7 +18,7 @@ final class GetProductInfoMessage extends MarketplaceRequest
     {
         parent::__construct(
             $config,
-            MarketplaceRequest::POST,
+            AbstractMarketplaceRequest::POST,
             '/v2/product/info',
             [
                 'offer_id' => $offerId,

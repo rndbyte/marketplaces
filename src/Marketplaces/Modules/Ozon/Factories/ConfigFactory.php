@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Marketplaces\Modules\Ozon\Factories;
 
 use InvalidArgumentException;
-use Marketplaces\Contracts\Factory;
 use Marketplaces\Modules\Ozon\Config;
+use Marketplaces\Contracts\FactoryInterface;
 
-final class ConfigFactory implements Factory
+class ConfigFactory implements FactoryInterface
 {
     public static function new(): self
     {

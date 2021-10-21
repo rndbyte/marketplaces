@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Marketplaces\Contracts;
 
-interface Factory
+interface FactoryInterface
 {
-    public static function new(): self;
     public function create(): mixed;
 }

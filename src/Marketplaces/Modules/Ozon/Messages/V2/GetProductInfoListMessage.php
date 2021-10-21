@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Marketplaces\Modules\Ozon\Messages\V2;
 
-use Marketplaces\Contracts\Config;
-use Marketplaces\Components\Abstracts\MarketplaceRequest;
+use Marketplaces\Contracts\ConfigInterface;
+use Marketplaces\Components\Abstracts\AbstractMarketplaceRequest;
 
 /**
  * Информация о списке товаров.
@@ -15,7 +15,7 @@ use Marketplaces\Components\Abstracts\MarketplaceRequest;
  * Class GetProductInfoListMessage
  * @package Marketplaces\Modules\Ozon\Messages\V2
  */
-final class GetProductInfoListMessage extends MarketplaceRequest
+class GetProductInfoListMessage extends AbstractMarketplaceRequest
 {
     /**
      * @param string[] $offerId
@@ -23,7 +23,7 @@ final class GetProductInfoListMessage extends MarketplaceRequest
      * @param int[] $sku
      */
     public function __construct(
-        Config $config,
+        ConfigInterface $config,
         array $offerId,
         array $productId = [],
         array $sku = [],
@@ -31,7 +31,7 @@ final class GetProductInfoListMessage extends MarketplaceRequest
     {
         parent::__construct(
             $config,
-            MarketplaceRequest::POST,
+            AbstractMarketplaceRequest::POST,
             '/v2/product/info/list',
             [
                 'offer_id' => $offerId,

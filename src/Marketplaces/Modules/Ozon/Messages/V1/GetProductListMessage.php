@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Marketplaces\Modules\Ozon\Messages\V1;
 
-use Marketplaces\Contracts\Config;
-use Marketplaces\Components\Abstracts\MarketplaceRequest;
+use Marketplaces\Contracts\ConfigInterface;
+use Marketplaces\Components\Abstracts\AbstractMarketplaceRequest;
 use Marketplaces\Modules\Ozon\DTO\ProductListFilters;
 
-final class GetProductListMessage extends MarketplaceRequest
+class GetProductListMessage extends AbstractMarketplaceRequest
 {
     public function __construct(
-        Config $config,
+        ConfigInterface $config,
         ProductListFilters $filters,
         int $page = null,
         int $pageSize = null,
@@ -19,7 +19,7 @@ final class GetProductListMessage extends MarketplaceRequest
     {
         parent::__construct(
             $config,
-            MarketplaceRequest::POST,
+            AbstractMarketplaceRequest::POST,
             '/v1/product/list',
             [
                 'page' => $page,

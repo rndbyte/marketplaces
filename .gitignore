@@ -2,3 +2,4 @@
 vendor
 .phpunit.result.cache
 src/Marketplaces/Modules/Aliexpress
+tests

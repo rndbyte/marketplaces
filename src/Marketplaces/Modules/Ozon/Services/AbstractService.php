@@ -7,7 +7,7 @@ namespace Marketplaces\Modules\Ozon\Services;
 use JsonException;
 use Psr\Http\Message\ResponseInterface;
 use Marketplaces\Modules\Ozon\Enums\ApiErrors;
-use Marketplaces\Components\Abstracts\MarketplaceService;
+use Marketplaces\Components\Abstracts\AbstractMarketplaceService;
 use Marketplaces\Modules\Ozon\Factories\ErrorResponseFactory;
 use Marketplaces\Modules\Ozon\Exceptions\{NotFoundException,
     InternalException,
@@ -18,7 +18,7 @@ use Marketplaces\Modules\Ozon\Exceptions\{NotFoundException,
     RequestTimeoutException,
     NotFoundInSortingCenterException};
 
-abstract class AbstractService extends MarketplaceService
+abstract class AbstractService extends AbstractMarketplaceService
 {
     /**
      * @throws OzonSellerException

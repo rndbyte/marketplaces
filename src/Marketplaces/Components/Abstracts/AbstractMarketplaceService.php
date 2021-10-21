@@ -6,14 +6,14 @@ namespace Marketplaces\Components\Abstracts;
 
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\ResponseInterface;
-use Marketplaces\Contracts\{Config, Service, Request};
+use Marketplaces\Contracts\{ConfigInterface, ServiceInterface, RequestInterface};
 use Marketplaces\Components\Exceptions\MarketplaceException;
 use Psr\Http\Client\{ClientInterface, ClientExceptionInterface};
 
-abstract class MarketplaceService implements Service
+abstract class AbstractMarketplaceService implements ServiceInterface
 {
     public function __construct(
-        protected Config $config,
+        protected ConfigInterface $config,
         protected LoggerInterface $logger,
         protected ClientInterface $httpClient,
     )
@@ -24,7 +24,7 @@ abstract class MarketplaceService implements Service
      * @throws MarketplaceException
      * @throws ClientExceptionInterface
      */
-    public function sendRequest(Request $request): string
+    public function sendRequest(RequestInterface $request): string
     {
         $response = $this->httpClient->sendRequest($request->createHttpRequest());
         return $this->getResponseResultOrThrowException($response);

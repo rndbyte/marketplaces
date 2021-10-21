@@ -8,6 +8,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Marketplaces\Modules\Ozon\Services\AbstractService;
 use Marketplaces\Components\Exceptions\MarketplaceException;
 use Marketplaces\Modules\Ozon\Results\V2\ProductInfoResult;
+use Marketplaces\Modules\Ozon\Factories\ResponseResultFactory;
 use Marketplaces\Modules\Ozon\Results\V2\ProductInfoListResult;
 use Marketplaces\Modules\Ozon\Messages\V2\GetProductInfoMessage;
 use Marketplaces\Modules\Ozon\Messages\V2\GetProductInfoListMessage;
@@ -35,7 +36,9 @@ class ProductService extends AbstractService
             sku: $sku,
         );
 
-        return ProductInfoResult::fromJson($this->sendRequest($request));
+        /** @var ProductInfoResult $result */
+        $result = ResponseResultFactory::new(ProductInfoResult::class, $this->sendRequest($request));
+        return $result;
     }
 
     /**
@@ -59,6 +62,8 @@ class ProductService extends AbstractService
             sku: $sku,
         );
 
-        return ProductInfoListResult::fromJson($this->sendRequest($request));
+        /** @var ProductInfoListResult $result */
+        $result = ResponseResultFactory::new(ProductInfoListResult::class, $this->sendRequest($request));
+        return $result;
     }
 }

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Marketplaces\Modules\Ozon\Factories;
 
 use InvalidArgumentException;
-use Marketplaces\Contracts\Factory;
+use Marketplaces\Contracts\FactoryInterface;
 use Marketplaces\Modules\Ozon\DTO\ErrorResponse;
 
-final class ErrorResponseFactory implements Factory
+class ErrorResponseFactory implements FactoryInterface
 {
     public static function new(): self
     {
