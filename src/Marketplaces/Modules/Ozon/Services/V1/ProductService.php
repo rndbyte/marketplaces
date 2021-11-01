@@ -6,11 +6,11 @@ namespace Marketplaces\Modules\Ozon\Services\V1;
 
 use Psr\Http\Client\ClientExceptionInterface;
 use Marketplaces\Modules\Ozon\DTO\ProductListFilters;
-use Marketplaces\Modules\Ozon\Services\AbstractService;
+use Marketplaces\Components\Support\ResponseResultFactory;
+use Marketplaces\Modules\Ozon\Services\AbstractOzonService;
 use Marketplaces\Modules\Ozon\Results\V1\ProductListResult;
 use Marketplaces\Components\Exceptions\MarketplaceException;
 use Marketplaces\Modules\Ozon\Exceptions\OzonSellerException;
-use Marketplaces\Modules\Ozon\Factories\ResponseResultFactory;
 use Marketplaces\Modules\Ozon\Messages\V1\GetProductListMessage;
 use Marketplaces\Modules\Ozon\Results\V1\UpdateProductPriceResult;
 use Marketplaces\Modules\Ozon\Messages\V1\UpdateProductPriceMessage;
@@ -18,7 +18,7 @@ use Marketplaces\Modules\Ozon\Results\V1\UpdateProductQuantityResult;
 use Marketplaces\Modules\Ozon\Messages\V1\UpdateProductsPricesMessage;
 use Marketplaces\Modules\Ozon\Messages\V1\UpdateProductQuantityMessage;
 
-class ProductService extends AbstractService
+class ProductService extends AbstractOzonService
 {
     /**
      * Receive the list of products.
@@ -88,6 +88,8 @@ class ProductService extends AbstractService
 
     /**
      * Update the prices for many products.
+     *
+     * @see https://docs.ozon.ru/api/seller#/v1/product/import/prices
      *
      * @param array[] $prices
      * @return UpdateProductPriceResult
