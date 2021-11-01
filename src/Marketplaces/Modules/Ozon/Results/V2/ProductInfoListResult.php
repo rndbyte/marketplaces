@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Marketplaces\Modules\Ozon\Results\V2;
 
 use stdClass;
-use Marketplaces\Components\Abstracts\AbstractHttpResponseResult;
+use Marketplaces\Components\Abstracts\AbstractMarketplaceResponse;
 
 /**
  * @package Marketplaces\Modules\Ozon\Results\V2
  * @property ProductInfoResult[] items
  */
-final class ProductInfoListResult extends AbstractHttpResponseResult
+final class ProductInfoListResult extends AbstractMarketplaceResponse
 {
-    protected function __construct(stdClass $payload)
+    public function __construct(stdClass $payload)
     {
         $data = $payload;
         if (property_exists($data, 'result')) {

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Marketplaces\Modules\Ozon\Messages\V1;
 
 use Marketplaces\Contracts\ConfigInterface;
-use Marketplaces\Components\Abstracts\AbstractMarketplaceRequest;
 use Marketplaces\Modules\Ozon\DTO\ProductListFilters;
+use Marketplaces\Components\Abstracts\AbstractMarketplaceRequest;
 
 class GetProductListMessage extends AbstractMarketplaceRequest
 {

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Marketplaces\Components\Abstracts;
 
 use stdClass;
-use Marketplaces\Contracts\ResultInterface;
+use Marketplaces\Contracts\ResponseInterface;
 
-abstract class AbstractHttpResponseResult implements ResultInterface
+abstract class AbstractMarketplaceResponse implements ResponseInterface
 {
-    protected function __construct(protected stdClass $payload)
+    public function __construct(protected stdClass $payload)
     {
     }
 

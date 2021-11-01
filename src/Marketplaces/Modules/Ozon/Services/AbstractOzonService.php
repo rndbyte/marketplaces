@@ -7,8 +7,8 @@ namespace Marketplaces\Modules\Ozon\Services;
 use JsonException;
 use Psr\Http\Message\ResponseInterface;
 use Marketplaces\Modules\Ozon\Enums\ApiErrors;
-use Marketplaces\Components\Abstracts\AbstractMarketplaceService;
 use Marketplaces\Modules\Ozon\Factories\ErrorResponseFactory;
+use Marketplaces\Components\Abstracts\AbstractMarketplaceService;
 use Marketplaces\Modules\Ozon\Exceptions\{NotFoundException,
     InternalException,
     OzonSellerException,
@@ -18,7 +18,7 @@ use Marketplaces\Modules\Ozon\Exceptions\{NotFoundException,
     RequestTimeoutException,
     NotFoundInSortingCenterException};
 
-abstract class AbstractService extends AbstractMarketplaceService
+abstract class AbstractOzonService extends AbstractMarketplaceService
 {
     /**
      * @throws OzonSellerException
@@ -73,7 +73,7 @@ abstract class AbstractService extends AbstractMarketplaceService
             throw new OzonSellerException(
                 'Invalid json response: ' . $responseBodyContent,
                 $e->getCode(),
-                $e
+                $e,
             );
         }
     }

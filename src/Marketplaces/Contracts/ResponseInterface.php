@@ -6,7 +6,7 @@ namespace Marketplaces\Contracts;
 
 use Stringable;
 
-interface ResultInterface extends Stringable, ArrayableInterface
+interface ResponseInterface extends Stringable, ArrayableInterface
 {
     public function getPayload(): mixed;
 }

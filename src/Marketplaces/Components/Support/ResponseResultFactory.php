@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Marketplaces\Modules\Ozon\Factories;
+namespace Marketplaces\Components\Support;
 
 use ReflectionClass;
 use InvalidArgumentException;
-use Marketplaces\Contracts\ResultInterface;
 use Marketplaces\Contracts\FactoryInterface;
+use Marketplaces\Contracts\ResponseInterface;
 use Marketplaces\Components\Exceptions\MarketplaceException;
 
 class ResponseResultFactory implements FactoryInterface
@@ -24,13 +24,13 @@ class ResponseResultFactory implements FactoryInterface
     /**
      * @throws MarketplaceException
      */
-    public function create(): ResultInterface
+    public function create(): ResponseInterface
     {
         try {
             $reflect = new ReflectionClass($this->className);
 
-            if ($reflect->implementsInterface(ResultInterface::class)) {
-                /** @var ResultInterface $obj */
+            if ($reflect->implementsInterface(ResponseInterface::class)) {
+                /** @var ResponseInterface $obj */
                 $obj = $reflect->newInstance(json_decode(
                     json: $this->jsonString,
                     associative: false,
@@ -39,7 +39,7 @@ class ResponseResultFactory implements FactoryInterface
 
                 return $obj;
             } else {
-                throw new InvalidArgumentException('Provided class must implement ' . ResultInterface::class);
+                throw new InvalidArgumentException('Provided class must implement ' . ResponseInterface::class);
             }
         } catch (\Exception $e) {
             throw new MarketplaceException($e->getMessage(), $e->getCode(), $e);

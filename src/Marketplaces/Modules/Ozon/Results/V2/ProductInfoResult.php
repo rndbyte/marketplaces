@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Marketplaces\Modules\Ozon\Results\V2;
 
 use stdClass;
-use Marketplaces\Components\Abstracts\AbstractHttpResponseResult;
+use Marketplaces\Components\Abstracts\AbstractMarketplaceResponse;
 
 /**
  * Class ProductInfoResponseResultDTO
@@ -37,7 +37,7 @@ use Marketplaces\Components\Abstracts\AbstractHttpResponseResult;
  * @property bool is_prepayment Флаг обязательной предоплаты для товара.
  * @property bool is_prepayment_allowed Undefined?
  */
-final class ProductInfoResult extends AbstractHttpResponseResult
+final class ProductInfoResult extends AbstractMarketplaceResponse
 {
     public static function fromObject(stdClass $result): self
     {

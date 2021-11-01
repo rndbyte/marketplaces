@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Marketplaces\Modules\Ozon\Services\V2;
 
 use Psr\Http\Client\ClientExceptionInterface;
-use Marketplaces\Modules\Ozon\Services\AbstractService;
-use Marketplaces\Components\Exceptions\MarketplaceException;
+use Marketplaces\Components\Support\ResponseResultFactory;
 use Marketplaces\Modules\Ozon\Results\V2\ProductInfoResult;
-use Marketplaces\Modules\Ozon\Factories\ResponseResultFactory;
+use Marketplaces\Modules\Ozon\Services\AbstractOzonService;
+use Marketplaces\Components\Exceptions\MarketplaceException;
 use Marketplaces\Modules\Ozon\Results\V2\ProductInfoListResult;
 use Marketplaces\Modules\Ozon\Messages\V2\GetProductInfoMessage;
 use Marketplaces\Modules\Ozon\Messages\V2\GetProductInfoListMessage;
 
-class ProductService extends AbstractService
+class ProductService extends AbstractOzonService
 {
     /**
      * Receive product info.

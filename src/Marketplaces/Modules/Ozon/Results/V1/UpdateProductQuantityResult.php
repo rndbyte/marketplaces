@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Marketplaces\Modules\Ozon\Results\V1;
 
 use stdClass;
-use Marketplaces\Components\Abstracts\AbstractHttpResponseResult;
+use Marketplaces\Components\Abstracts\AbstractMarketplaceResponse;
 
 /**
  * Class UpdateProductQuantityResult
@@ -13,7 +13,7 @@ use Marketplaces\Components\Abstracts\AbstractHttpResponseResult;
  * @package Ozon\Services\V1\DTO\Responses
  * @property stdClass[] result
  */
-final class UpdateProductQuantityResult extends AbstractHttpResponseResult
+final class UpdateProductQuantityResult extends AbstractMarketplaceResponse
 {
     /**
      * Array of updated products.
