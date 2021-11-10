@@ -6,7 +6,7 @@ namespace Marketplaces\Contracts;
 
 use Psr\Http\Message\RequestInterface as RequestContract;
 
-interface RequestInterface
+interface MarketplaceRequestInterface
 {
     public const POST = 'POST';
     public const GET = 'GET';

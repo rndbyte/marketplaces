@@ -6,10 +6,17 @@ namespace Marketplaces\Components\Abstracts;
 
 use GuzzleHttp\Psr7\Request as HttpRequest;
 use Marketplaces\Contracts\ConfigInterface;
-use Marketplaces\Contracts\RequestInterface;
+use Marketplaces\Contracts\MarketplaceRequestInterface;
 use Psr\Http\Message\RequestInterface as RequestContract;
 
-abstract class AbstractMarketplaceRequest implements RequestInterface
+/**
+ * Class AbstractMarketplaceRequest
+ *
+ * Responsibility of this class is to hold and calculate data for http request.
+ *
+ * @package Marketplaces\Components\Abstracts
+ */
+abstract class AbstractMarketplaceRequest implements MarketplaceRequestInterface
 {
     protected string $url;
     protected array $headers;

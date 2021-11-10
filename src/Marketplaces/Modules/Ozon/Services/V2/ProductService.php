@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Marketplaces\Modules\Ozon\Services\V2;
 
 use Psr\Http\Client\ClientExceptionInterface;
-use Marketplaces\Components\Support\ResponseResultFactory;
 use Marketplaces\Modules\Ozon\Results\V2\ProductInfoResult;
 use Marketplaces\Modules\Ozon\Services\AbstractOzonService;
+use Marketplaces\Components\Factories\ResponseResultFactory;
 use Marketplaces\Components\Exceptions\MarketplaceException;
 use Marketplaces\Modules\Ozon\Results\V2\ProductInfoListResult;
 use Marketplaces\Modules\Ozon\Messages\V2\GetProductInfoMessage;

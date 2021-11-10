@@ -5,9 +5,16 @@ declare(strict_types=1);
 namespace Marketplaces\Components\Abstracts;
 
 use stdClass;
-use Marketplaces\Contracts\ResponseInterface;
+use Marketplaces\Contracts\MarketplaceResponseInterface;
 
-abstract class AbstractMarketplaceResponse implements ResponseInterface
+/**
+ * Class AbstractMarketplaceResponse
+ *
+ * Responsibility of this class is to hold and calculate data of http response (with possible errors).
+ *
+ * @package Marketplaces\Components\Abstracts
+ */
+abstract class AbstractMarketplaceResponse implements MarketplaceResponseInterface
 {
     public function __construct(protected stdClass $payload)
     {

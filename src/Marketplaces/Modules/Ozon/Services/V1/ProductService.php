@@ -6,9 +6,9 @@ namespace Marketplaces\Modules\Ozon\Services\V1;
 
 use Psr\Http\Client\ClientExceptionInterface;
 use Marketplaces\Modules\Ozon\DTO\ProductListFilters;
-use Marketplaces\Components\Support\ResponseResultFactory;
 use Marketplaces\Modules\Ozon\Services\AbstractOzonService;
 use Marketplaces\Modules\Ozon\Results\V1\ProductListResult;
+use Marketplaces\Components\Factories\ResponseResultFactory;
 use Marketplaces\Components\Exceptions\MarketplaceException;
 use Marketplaces\Modules\Ozon\Exceptions\OzonSellerException;
 use Marketplaces\Modules\Ozon\Messages\V1\GetProductListMessage;

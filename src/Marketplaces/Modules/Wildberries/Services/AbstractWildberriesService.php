@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Marketplaces\Modules\YandexMarket\Services;
+namespace Marketplaces\Modules\Wildberries\Services;
 
 use JsonException;
 use Psr\Http\Message\ResponseInterface;
-use Marketplaces\Modules\YandexMarket\Enums\ApiErrors;
+use Marketplaces\Modules\Wildberries\Enums\ApiErrors;
 use Marketplaces\Components\Abstracts\AbstractMarketplaceService;
-use Marketplaces\Modules\YandexMarket\Exceptions\YandexMarketException;
+use Marketplaces\Modules\Wildberries\Exceptions\WildberriesException;
 
-abstract class AbstractYandexMarketService extends AbstractMarketplaceService
+abstract class AbstractWildberriesService extends AbstractMarketplaceService
 {
     protected function getResponseResultOrThrowException(ResponseInterface $response): string
     {
@@ -28,30 +28,32 @@ abstract class AbstractYandexMarketService extends AbstractMarketplaceService
 
     /**
      * @param ResponseInterface $response
-     * @throws YandexMarketException
+     * @throws WildberriesException
      */
     protected function handleResponseErrors(ResponseInterface $response): void
     {
         $responseBodyContent = $response->getBody()->getContents();
-        $errorsData = $this->extractResponseBodyContent($responseBodyContent);
+        $errorData = $this->extractResponseBodyContent($responseBodyContent);
         $exceptionsList = ApiErrors::getExceptionsList();
 
-        if (!array_key_exists('errors', $errorsData) || !array_key_exists($response->getStatusCode(), $exceptionsList)) {
-            throw new YandexMarketException('An error has occurred: ' . $responseBodyContent);
+        if (!array_key_exists($response->getStatusCode(), $exceptionsList)) {
+            throw new WildberriesException('An error has occurred: ' . $responseBodyContent);
         }
 
-        throw new $exceptionsList[$response->getStatusCode()]($errorsData['errors'][0]['message']);
+        throw new $exceptionsList[$response->getStatusCode()]();
     }
 
     /**
-     * @throws YandexMarketException
+     * @param string $responseBodyContent
+     * @return array
+     * @throws WildberriesException
      */
     protected function extractResponseBodyContent(string $responseBodyContent): array
     {
         try {
             return json_decode($responseBodyContent, true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
-            throw new YandexMarketException(
+            throw new WildberriesException(
                 'Invalid json response: ' . $e->getMessage(),
                 $e->getCode(),
                 $e,

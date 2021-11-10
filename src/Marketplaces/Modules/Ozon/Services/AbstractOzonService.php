@@ -25,13 +25,11 @@ abstract class AbstractOzonService extends AbstractMarketplaceService
      */
     protected function getResponseResultOrThrowException(ResponseInterface $response): string
     {
-        $responseBodyContent = $response->getBody()->getContents();
-
         if (!$this->isValidResponse($response)) {
-            $this->throwCorrespondingException($responseBodyContent);
+            $this->handleResponseErrors($response);
         }
 
-        return $responseBodyContent;
+        return $response->getBody()->getContents();
     }
 
     protected function isValidResponse(ResponseInterface $response): bool
@@ -40,6 +38,7 @@ abstract class AbstractOzonService extends AbstractMarketplaceService
     }
 
     /**
+     * @param ResponseInterface $response
      * @throws OzonSellerException
      * @throws AccessDeniedException
      * @throws BadRequestException
@@ -49,8 +48,9 @@ abstract class AbstractOzonService extends AbstractMarketplaceService
      * @throws ValidationException
      * @throws RequestTimeoutException
      */
-    protected function throwCorrespondingException(string $responseBodyContent): void
+    protected function handleResponseErrors(ResponseInterface $response): void
     {
+        $responseBodyContent = $response->getBody()->getContents();
         $errorData = $this->extractResponseBodyContentData($responseBodyContent);
         $errorResponseDto = ErrorResponseFactory::new()->create($errorData);
         $exceptionsList = ApiErrors::getExceptionsList();
@@ -71,7 +71,7 @@ abstract class AbstractOzonService extends AbstractMarketplaceService
             return json_decode($responseBodyContent, true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
             throw new OzonSellerException(
-                'Invalid json response: ' . $responseBodyContent,
+                'Invalid json response: ' . $e->getMessage(),
                 $e->getCode(),
                 $e,
             );

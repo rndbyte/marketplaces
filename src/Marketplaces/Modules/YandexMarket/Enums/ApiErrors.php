@@ -15,14 +15,14 @@ use Marketplaces\Modules\YandexMarket\Exceptions\UnsupportedMediaTypeException;
 
 final class ApiErrors
 {
-    public const ACCESS_DENIED = '403';
-    public const BAD_REQUEST = '400';
-    public const UNAUTHORIZED = '401';
-    public const NOT_FOUND = '404';
-    public const METHOD_NOT_ALLOWED = '405';
-    public const UNSUPPORTED_MEDIA_TYPE = '415';
-    public const ENHANCE_YOUR_CALM = '420';
-    public const INTERNAL_ERROR = '503';
+    public const ACCESS_DENIED = 403;
+    public const BAD_REQUEST = 400;
+    public const UNAUTHORIZED = 401;
+    public const NOT_FOUND = 404;
+    public const METHOD_NOT_ALLOWED = 405;
+    public const UNSUPPORTED_MEDIA_TYPE = 415;
+    public const ENHANCE_YOUR_CALM = 420;
+    public const INTERNAL_ERROR = 503;
 
     public static function getExceptionsList(): array
     {
