@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Marketplaces\Modules\Ozon\DTO;
 
+use InvalidArgumentException;
 use Marketplaces\Modules\Ozon\Enums\ProductVisibility;
 
 class ProductListFilters
@@ -20,7 +21,7 @@ class ProductListFilters
     )
     {
         if (is_string($visibility) && !in_array($visibility, ProductVisibility::VISIBILITY_STATUSES)) {
-            throw new \InvalidArgumentException('Invalid visibility value: ' . $visibility);
+            throw new InvalidArgumentException('Invalid visibility value: ' . $visibility);
         }
         $this->visibility = $visibility;
     }

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Marketplaces\Modules\Ozon\Services;
 
-use JsonException;
+use stdClass;
 use Psr\Http\Message\ResponseInterface;
 use Marketplaces\Modules\Ozon\Enums\ApiErrors;
-use Marketplaces\Modules\Ozon\Factories\ErrorResponseFactory;
+use Marketplaces\Modules\Ozon\Factories\ErrorFactory;
+use Marketplaces\Components\Exceptions\MarketplaceException;
 use Marketplaces\Components\Abstracts\AbstractMarketplaceService;
 use Marketplaces\Modules\Ozon\Exceptions\{NotFoundException,
     InternalException,
@@ -21,24 +22,33 @@ use Marketplaces\Modules\Ozon\Exceptions\{NotFoundException,
 abstract class AbstractOzonService extends AbstractMarketplaceService
 {
     /**
+     * @inheritDoc
+     *
+     * @throws AccessDeniedException
+     * @throws BadRequestException
+     * @throws InternalException
+     * @throws MarketplaceException
+     * @throws NotFoundException
+     * @throws NotFoundInSortingCenterException
      * @throws OzonSellerException
+     * @throws RequestTimeoutException
+     * @throws ValidationException
      */
-    protected function getResponseResultOrThrowException(ResponseInterface $response): string
+    protected function getResponseContentOrThrowException(ResponseInterface $response): stdClass
     {
         if (!$this->isValidResponse($response)) {
             $this->handleResponseErrors($response);
         }
 
-        return $response->getBody()->getContents();
-    }
-
-    protected function isValidResponse(ResponseInterface $response): bool
-    {
-        return $response->getStatusCode() < 400;
+        return $this->extractResponseJsonContent($response->getBody()->getContents());
     }
 
     /**
+     * Handle specific api errors.
+     *
      * @param ResponseInterface $response
+     *
+     * @throws MarketplaceException
      * @throws OzonSellerException
      * @throws AccessDeniedException
      * @throws BadRequestException
@@ -48,33 +58,17 @@ abstract class AbstractOzonService extends AbstractMarketplaceService
      * @throws ValidationException
      * @throws RequestTimeoutException
      */
-    protected function handleResponseErrors(ResponseInterface $response): void
+    private function handleResponseErrors(ResponseInterface $response): void
     {
         $responseBodyContent = $response->getBody()->getContents();
-        $errorData = $this->extractResponseBodyContentData($responseBodyContent);
-        $errorResponseDto = ErrorResponseFactory::new()->create($errorData);
+        $errorData = $this->extractResponseJsonContent($responseBodyContent);
+        $errorDto = ErrorFactory::new()->create((array)$errorData);
         $exceptionsList = ApiErrors::getExceptionsList();
 
-        if (!array_key_exists($errorResponseDto->code, $exceptionsList)) {
+        if (!array_key_exists($errorDto->code, $exceptionsList)) {
             throw new OzonSellerException('An error has occurred: ' . $responseBodyContent);
         }
 
-        throw new $exceptionsList[$errorResponseDto->code]($errorResponseDto->message);
-    }
-
-    /**
-     * @throws OzonSellerException
-     */
-    private function extractResponseBodyContentData(string $responseBodyContent): array
-    {
-        try {
-            return json_decode($responseBodyContent, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            throw new OzonSellerException(
-                'Invalid json response: ' . $e->getMessage(),
-                $e->getCode(),
-                $e,
-            );
-        }
+        throw new $exceptionsList[$errorDto->code]($errorDto->message);
     }
 }

@@ -4,58 +4,70 @@ declare(strict_types=1);
 
 namespace Marketplaces\Modules\YandexMarket\Services;
 
-use JsonException;
+use stdClass;
 use Psr\Http\Message\ResponseInterface;
 use Marketplaces\Modules\YandexMarket\Enums\ApiErrors;
+use Marketplaces\Components\Exceptions\MarketplaceException;
 use Marketplaces\Components\Abstracts\AbstractMarketplaceService;
+use Marketplaces\Modules\YandexMarket\Exceptions\NotFoundException;
+use Marketplaces\Modules\YandexMarket\Exceptions\InternalException;
+use Marketplaces\Modules\YandexMarket\Exceptions\BadRequestException;
 use Marketplaces\Modules\YandexMarket\Exceptions\YandexMarketException;
+use Marketplaces\Modules\YandexMarket\Exceptions\AccessDeniedException;
+use Marketplaces\Modules\YandexMarket\Exceptions\UnauthorizedException;
+use Marketplaces\Modules\YandexMarket\Exceptions\EnhanceYourCalmException;
+use Marketplaces\Modules\YandexMarket\Exceptions\MethodNotAllowedException;
+use Marketplaces\Modules\YandexMarket\Exceptions\UnsupportedMediaTypeException;
 
 abstract class AbstractYandexMarketService extends AbstractMarketplaceService
 {
-    protected function getResponseResultOrThrowException(ResponseInterface $response): string
+    /**
+     * @inheritDoc
+     *
+     * @throws AccessDeniedException
+     * @throws BadRequestException
+     * @throws EnhanceYourCalmException
+     * @throws InternalException
+     * @throws MarketplaceException
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     * @throws UnauthorizedException
+     * @throws UnsupportedMediaTypeException
+     * @throws YandexMarketException
+     */
+    protected function getResponseContentOrThrowException(ResponseInterface $response): stdClass
     {
         if (!$this->isValidResponse($response)) {
             $this->handleResponseErrors($response);
         }
 
-        return $response->getBody()->getContents();
-    }
-
-    protected function isValidResponse(ResponseInterface $response): bool
-    {
-        return $response->getStatusCode() < 400;
+        return $this->extractResponseJsonContent($response->getBody()->getContents());
     }
 
     /**
      * @param ResponseInterface $response
+     *
      * @throws YandexMarketException
+     * @throws MarketplaceException
+     * @throws NotFoundException
+     * @throws InternalException
+     * @throws BadRequestException
+     * @throws AccessDeniedException
+     * @throws UnauthorizedException
+     * @throws EnhanceYourCalmException
+     * @throws MethodNotAllowedException
+     * @throws UnsupportedMediaTypeException
      */
-    protected function handleResponseErrors(ResponseInterface $response): void
+    private function handleResponseErrors(ResponseInterface $response): void
     {
         $responseBodyContent = $response->getBody()->getContents();
-        $errorsData = $this->extractResponseBodyContent($responseBodyContent);
+        $errorsData = $this->extractResponseJsonContent($responseBodyContent);
         $exceptionsList = ApiErrors::getExceptionsList();
 
-        if (!array_key_exists('errors', $errorsData) || !array_key_exists($response->getStatusCode(), $exceptionsList)) {
+        if (!array_key_exists('errors', (array)$errorsData) || !array_key_exists($response->getStatusCode(), $exceptionsList)) {
             throw new YandexMarketException('An error has occurred: ' . $responseBodyContent);
         }
 
-        throw new $exceptionsList[$response->getStatusCode()]($errorsData['errors'][0]['message']);
-    }
-
-    /**
-     * @throws YandexMarketException
-     */
-    protected function extractResponseBodyContent(string $responseBodyContent): array
-    {
-        try {
-            return json_decode($responseBodyContent, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            throw new YandexMarketException(
-                'Invalid json response: ' . $e->getMessage(),
-                $e->getCode(),
-                $e,
-            );
-        }
+        throw new $exceptionsList[$response->getStatusCode()]((array)$errorsData['errors'][0]['message']);
     }
 }

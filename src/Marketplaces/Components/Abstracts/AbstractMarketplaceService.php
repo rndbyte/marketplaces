@@ -4,22 +4,18 @@ declare(strict_types=1);
 
 namespace Marketplaces\Components\Abstracts;
 
-use Psr\Log\LoggerInterface;
+use stdClass;
+use JsonException;
 use Psr\Http\Message\ResponseInterface;
-use Marketplaces\Contracts\{ConfigInterface, MarketplaceServiceInterface, MarketplaceRequestInterface};
+use Marketplaces\Components\Factories\HttpRequestFactory;
 use Marketplaces\Components\Exceptions\MarketplaceException;
 use Psr\Http\Client\{ClientInterface, ClientExceptionInterface};
+use Marketplaces\Contracts\{ConfigInterface, MarketplaceServiceInterface, MarketplaceRequestInterface};
 
 /**
  * Class AbstractMarketplaceService
  *
  * Responsibility of this class is to send http requests via http client.
- *
- * So workflow of methods will be like:
- *     1) Prepare marketplace request (create instance, insert data);
- *     2) Create http request from marketplace request (via factory);
- *     3) Send http request;
- *     4) Return marketplace response from http response or throw corresponding exception (via factory);
  *
  * @package Marketplaces\Components\Abstracts
  */
@@ -27,27 +23,67 @@ abstract class AbstractMarketplaceService implements MarketplaceServiceInterface
 {
     public function __construct(
         protected ConfigInterface $config,
-        protected LoggerInterface $logger,
         protected ClientInterface $httpClient,
     )
     {
     }
 
     /**
+     * Send request to marketplace.
+     *
+     * @param MarketplaceRequestInterface $request
+     * @return ResponseInterface
      * @throws MarketplaceException
-     * @throws ClientExceptionInterface
      */
-    public function sendRequest(MarketplaceRequestInterface $request): string
+    public function sendRequest(MarketplaceRequestInterface $request): ResponseInterface
     {
-        // TODO use factory for http request
-        $response = $this->httpClient->sendRequest($request->createHttpRequest());
-        return $this->getResponseResultOrThrowException($response);
+        try {
+            return $this->httpClient->sendRequest((new HttpRequestFactory($request))->create());
+        } catch (ClientExceptionInterface $e) {
+            throw new MarketplaceException(
+                'Service responded with error: ' . $e->getMessage(),
+                $e->getCode(),
+                $e,
+            );
+        }
     }
 
     /**
+     * Validate http response.
+     *
      * @param ResponseInterface $response
-     * @return string
+     * @return bool
+     */
+    protected function isValidResponse(ResponseInterface $response): bool
+    {
+        return $response->getStatusCode() < 400;
+    }
+
+    /**
+     * Decode json string to object.
+     *
+     * @param string $responseBodyContent
+     * @return stdClass
      * @throws MarketplaceException
      */
-    abstract protected function getResponseResultOrThrowException(ResponseInterface $response): string;
+    protected function extractResponseJsonContent(string $responseBodyContent): stdClass
+    {
+        try {
+            return json_decode($responseBodyContent, false, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            throw new MarketplaceException(
+                'Invalid json string: ' . $e->getMessage(),
+                $e->getCode(),
+                $e,
+            );
+        }
+    }
+
+    /**
+     * Return content of http response or throw corresponding marketplace exception.
+     *
+     * @param ResponseInterface $response
+     * @return stdClass
+     */
+    abstract protected function getResponseContentOrThrowException(ResponseInterface $response): stdClass;
 }

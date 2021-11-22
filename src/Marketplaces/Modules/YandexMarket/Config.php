@@ -11,13 +11,12 @@ class Config implements ConfigInterface
     public function __construct(
         private string $oauthToken,
         private string $clientId,
-        private string $apiEndpoint,
-        private string $campaignId,
+        private string $apiEndpoint = 'https://api.partner.market.yandex.ru',
     )
     {
     }
 
-    public function getApiKey(): string
+    public function getAccessKey(): string
     {
         return $this->oauthToken;
     }
@@ -27,22 +26,17 @@ class Config implements ConfigInterface
         return $this->clientId;
     }
 
-    public function getHttpHeaders(): array
-    {
-        return [
-            'Authorization' => 'OAuth oauth_token=" '. $this->getApiKey() .' ", oauth_client_id="'. $this->getClientId() .'"',
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-        ];
-    }
-
-    public function getSecretToken(): string
-    {
-        return $this->campaignId;
-    }
-
     public function getApiEndpoint(): string
     {
         return $this->apiEndpoint;
+    }
+
+    public function getHttpHeaders(): array
+    {
+        return [
+            'Authorization' => 'OAuth oauth_token=" '. $this->getAccessKey() .' ", oauth_client_id="'. $this->getClientId() .'"',
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ];
     }
 }

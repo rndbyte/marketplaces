@@ -4,14 +4,20 @@ declare(strict_types=1);
 
 namespace Marketplaces\Modules\Ozon\Services\V2;
 
-use Psr\Http\Client\ClientExceptionInterface;
-use Marketplaces\Modules\Ozon\Results\V2\ProductInfoResult;
 use Marketplaces\Modules\Ozon\Services\AbstractOzonService;
-use Marketplaces\Components\Factories\ResponseResultFactory;
+use Marketplaces\Modules\Ozon\Exceptions\InternalException;
+use Marketplaces\Modules\Ozon\Exceptions\NotFoundException;
 use Marketplaces\Components\Exceptions\MarketplaceException;
-use Marketplaces\Modules\Ozon\Results\V2\ProductInfoListResult;
-use Marketplaces\Modules\Ozon\Messages\V2\GetProductInfoMessage;
-use Marketplaces\Modules\Ozon\Messages\V2\GetProductInfoListMessage;
+use Marketplaces\Modules\Ozon\Exceptions\OzonSellerException;
+use Marketplaces\Modules\Ozon\Exceptions\BadRequestException;
+use Marketplaces\Modules\Ozon\Exceptions\ValidationException;
+use Marketplaces\Modules\Ozon\Responses\V2\ProductInfoResponse;
+use Marketplaces\Modules\Ozon\Exceptions\AccessDeniedException;
+use Marketplaces\Modules\Ozon\Requests\V2\GetProductInfoRequest;
+use Marketplaces\Modules\Ozon\Exceptions\RequestTimeoutException;
+use Marketplaces\Modules\Ozon\Responses\V2\ProductInfoListResponse;
+use Marketplaces\Modules\Ozon\Requests\V2\GetProductInfoListRequest;
+use Marketplaces\Modules\Ozon\Exceptions\NotFoundInSortingCenterException;
 
 class ProductService extends AbstractOzonService
 {
@@ -23,22 +29,35 @@ class ProductService extends AbstractOzonService
      * @param string $offerId
      * @param int|null $productId
      * @param int|null $sku
-     * @return ProductInfoResult
-     * @throws ClientExceptionInterface
+     * @return ProductInfoResponse
+     *
      * @throws MarketplaceException
+     * @throws OzonSellerException
+     * @throws AccessDeniedException
+     * @throws BadRequestException
+     * @throws InternalException
+     * @throws NotFoundException
+     * @throws NotFoundInSortingCenterException
+     * @throws RequestTimeoutException
+     * @throws ValidationException
      */
-    public function info(string $offerId, int $productId = null, int $sku = null): ProductInfoResult
+    public function info(
+        string $offerId,
+        int $productId = null,
+        int $sku = null,
+    ): ProductInfoResponse
     {
-        $request = new GetProductInfoMessage(
+        $request = new GetProductInfoRequest(
             config: $this->config,
             offerId: $offerId,
             productId: $productId,
             sku: $sku,
         );
 
-        /** @var ProductInfoResult $result */
-        $result = ResponseResultFactory::new(ProductInfoResult::class, $this->sendRequest($request));
-        return $result;
+        $response = $this->sendRequest($request);
+        $payload = $this->getResponseContentOrThrowException($response);
+
+        return new ProductInfoResponse($payload);
     }
 
     /**
@@ -49,21 +68,34 @@ class ProductService extends AbstractOzonService
      * @param string[] $offerId
      * @param int[] $productId
      * @param int[] $sku
-     * @return ProductInfoListResult
-     * @throws ClientExceptionInterface
+     * @return ProductInfoListResponse
+     *
+     * @throws AccessDeniedException
+     * @throws BadRequestException
+     * @throws InternalException
      * @throws MarketplaceException
+     * @throws NotFoundException
+     * @throws NotFoundInSortingCenterException
+     * @throws OzonSellerException
+     * @throws RequestTimeoutException
+     * @throws ValidationException
      */
-    public function infoList(array $offerId, array $productId = [], array $sku = []): ProductInfoListResult
+    public function infoList(
+        array $offerId,
+        array $productId = [],
+        array $sku = [],
+    ): ProductInfoListResponse
     {
-        $request = new GetProductInfoListMessage(
+        $request = new GetProductInfoListRequest(
             config: $this->config,
             offerId: $offerId,
             productId: $productId,
             sku: $sku,
         );
 
-        /** @var ProductInfoListResult $result */
-        $result = ResponseResultFactory::new(ProductInfoListResult::class, $this->sendRequest($request));
-        return $result;
+        $response = $this->sendRequest($request);
+        $payload = $this->getResponseContentOrThrowException($response);
+
+        return new ProductInfoListResponse($payload);
     }
 }

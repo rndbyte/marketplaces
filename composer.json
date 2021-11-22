@@ -1,16 +1,15 @@
 {
     "name": "rndbyte/marketplaces",
     "description": "Marketplaces API interaction",
-    "keywords": ["marketplaces", "library"],
+    "keywords": ["marketplaces", "ozon", "seller", "yandex", "market", "wildberries", "sdk"],
     "license": "MIT",
     "type": "library",
     "scripts": {
-        "test": "./vendor/bin/phpunit -v"
+        "test": "php ./vendor/bin/phpunit"
     },
     "require": {
         "php": "^8.0",
         "ext-filter": "*",
-        "psr/log": "^1.1",
         "psr/http-client": "^1.0",
         "guzzlehttp/psr7": "^2.0"
     },

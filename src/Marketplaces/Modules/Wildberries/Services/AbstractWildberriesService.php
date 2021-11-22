@@ -4,36 +4,52 @@ declare(strict_types=1);
 
 namespace Marketplaces\Modules\Wildberries\Services;
 
-use JsonException;
+use stdClass;
 use Psr\Http\Message\ResponseInterface;
 use Marketplaces\Modules\Wildberries\Enums\ApiErrors;
+use Marketplaces\Components\Exceptions\MarketplaceException;
 use Marketplaces\Components\Abstracts\AbstractMarketplaceService;
+use Marketplaces\Modules\Wildberries\Exceptions\InternalException;
+use Marketplaces\Modules\Wildberries\Exceptions\BadRequestException;
 use Marketplaces\Modules\Wildberries\Exceptions\WildberriesException;
+use Marketplaces\Modules\Wildberries\Exceptions\UnauthorizedException;
+use Marketplaces\Modules\Wildberries\Exceptions\AccessDeniedException;
 
 abstract class AbstractWildberriesService extends AbstractMarketplaceService
 {
-    protected function getResponseResultOrThrowException(ResponseInterface $response): string
+    /**
+     * @inheritDoc
+     *
+     * @throws AccessDeniedException
+     * @throws BadRequestException
+     * @throws InternalException
+     * @throws MarketplaceException
+     * @throws UnauthorizedException
+     * @throws WildberriesException
+     */
+    protected function getResponseContentOrThrowException(ResponseInterface $response): stdClass
     {
         if (!$this->isValidResponse($response)) {
             $this->handleResponseErrors($response);
         }
 
-        return $response->getBody()->getContents();
-    }
-
-    protected function isValidResponse(ResponseInterface $response): bool
-    {
-        return $response->getStatusCode() < 400;
+        return $this->extractResponseJsonContent($response->getBody()->getContents());
     }
 
     /**
      * @param ResponseInterface $response
+     *
      * @throws WildberriesException
+     * @throws MarketplaceException
+     * @throws InternalException
+     * @throws BadRequestException
+     * @throws UnauthorizedException
+     * @throws AccessDeniedException
      */
-    protected function handleResponseErrors(ResponseInterface $response): void
+    private function handleResponseErrors(ResponseInterface $response): void
     {
         $responseBodyContent = $response->getBody()->getContents();
-        $errorData = $this->extractResponseBodyContent($responseBodyContent);
+        $errorData = $this->extractResponseJsonContent($responseBodyContent);
         $exceptionsList = ApiErrors::getExceptionsList();
 
         if (!array_key_exists($response->getStatusCode(), $exceptionsList)) {
@@ -41,23 +57,5 @@ abstract class AbstractWildberriesService extends AbstractMarketplaceService
         }
 
         throw new $exceptionsList[$response->getStatusCode()]();
-    }
-
-    /**
-     * @param string $responseBodyContent
-     * @return array
-     * @throws WildberriesException
-     */
-    protected function extractResponseBodyContent(string $responseBodyContent): array
-    {
-        try {
-            return json_decode($responseBodyContent, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            throw new WildberriesException(
-                'Invalid json response: ' . $e->getMessage(),
-                $e->getCode(),
-                $e,
-            );
-        }
     }
 }

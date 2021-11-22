@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Marketplaces\Components\Abstracts;
 
-use GuzzleHttp\Psr7\Request as HttpRequest;
 use Marketplaces\Contracts\ConfigInterface;
 use Marketplaces\Contracts\MarketplaceRequestInterface;
-use Psr\Http\Message\RequestInterface as RequestContract;
 
 /**
  * Class AbstractMarketplaceRequest
  *
- * Responsibility of this class is to hold and calculate data for http request.
+ * Responsibility of this class is to hold data for http request.
  *
  * @package Marketplaces\Components\Abstracts
  */
@@ -67,23 +65,6 @@ abstract class AbstractMarketplaceRequest implements MarketplaceRequestInterface
     public function getBodyAsJson(): string
     {
         return json_encode($this->body);
-    }
-
-    /**
-     * TODO move to separate factory
-     * Make Psr-7 request instance.
-     *
-     * @return RequestContract
-     */
-    public function createHttpRequest(): RequestContract
-    {
-        return new HttpRequest(
-            $this->getMethod(),
-            $this->getUrl(),
-            $this->getHeaders(),
-            $this->getBodyAsJson(),
-            $this->getHttpVersion(),
-        );
     }
 
     public function setParameters(array $parameters): self

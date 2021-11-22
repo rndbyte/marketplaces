@@ -6,9 +6,9 @@
         colors="true"
 >
     <testsuites>
-<!--        <testsuite name="Unit">-->
-<!--            <directory suffix="Test.php" phpVersion="8.0.0" phpVersionOperator=">=">./tests/Unit</directory>-->
-<!--        </testsuite>-->
+        <testsuite name="Unit">
+            <directory suffix="Test.php" phpVersion="8.0.0" phpVersionOperator=">=">./tests/Unit</directory>
+        </testsuite>
         <testsuite name="Feature">
             <directory suffix="Test.php" phpVersion="8.0.0" phpVersionOperator=">=">./tests/Feature</directory>
         </testsuite>

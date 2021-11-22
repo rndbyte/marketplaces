@@ -11,12 +11,12 @@ class Config implements ConfigInterface
     public function __construct(
         private string $apiKey,
         private string $clientId,
-        private string $apiEndpoint,
+        private string $apiEndpoint = 'https://api-seller.ozon.ru',
     )
     {
     }
 
-    public function getApiKey(): string
+    public function getAccessKey(): string
     {
         return $this->apiKey;
     }
@@ -35,13 +35,8 @@ class Config implements ConfigInterface
     {
         return [
             'Client-Id' => $this->getClientId(),
-            'Api-Key' => $this->getApiKey(),
+            'Api-Key' => $this->getAccessKey(),
             'Content-Type' => 'application/json',
         ];
-    }
-
-    public function getSecretToken(): string
-    {
-        return '';
     }
 }

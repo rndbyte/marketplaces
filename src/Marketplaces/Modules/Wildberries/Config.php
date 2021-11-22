@@ -10,12 +10,12 @@ class Config implements ConfigInterface
 {
     public function __construct(
         private string $apiKey,
-        private string $apiEndpoint,
+        private string $apiEndpoint = 'https://suppliers-api.wildberries.ru',
     )
     {
     }
 
-    public function getApiKey(): string
+    public function getAccessKey(): string
     {
         return $this->apiKey;
     }
@@ -25,21 +25,16 @@ class Config implements ConfigInterface
         return '';
     }
 
-    public function getHttpHeaders(): array
-    {
-        return [
-            'Authorization' => $this->getApiKey(),
-            'Content-Type' => 'application/json',
-        ];
-    }
-
-    public function getSecretToken(): string
-    {
-        return '';
-    }
-
     public function getApiEndpoint(): string
     {
         return $this->apiEndpoint;
+    }
+
+    public function getHttpHeaders(): array
+    {
+        return [
+            'Authorization' => $this->getAccessKey(),
+            'Content-Type' => 'application/json',
+        ];
     }
 }

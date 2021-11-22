@@ -10,7 +10,7 @@ use Marketplaces\Contracts\MarketplaceResponseInterface;
 /**
  * Class AbstractMarketplaceResponse
  *
- * Responsibility of this class is to hold and calculate data of http response (with possible errors).
+ * Responsibility of this class is to hold data of http response.
  *
  * @package Marketplaces\Components\Abstracts
  */
